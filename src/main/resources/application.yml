@@ -5,7 +5,7 @@ spring:
     username: root
     password: jmfjmf55
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: jdbc:log4jdbc:mysql://192.168.137.250:3306/user_info?serverTimezone=UTC&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:log4jdbc:mysql://192.168.137.250:3306/spring_demo_database?serverTimezone=UTC&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
 
 #thymelea模板配置
   thymeleaf:
@@ -18,9 +18,9 @@ spring:
 
 #mail配置
   mail:
-    host: xxx.163.com
-    username: xxx@163.com
-    password: xxxxxxx
+    host: smtp.qq.com
+    username: 2944807875@qq.com
+    password: qvwkubiwtlcvddcb
     default-encoding: UTF-8
 
 #rabbitmq配置
