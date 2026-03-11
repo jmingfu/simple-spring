@@ -25,10 +25,10 @@ spring:
 
 #rabbitmq配置
   rabbitmq:
-    host: xxx.xxxx.com
+    host: 192.168.137.250
     port: 5672
-    username: rabbitmq
-    password: rabbitmq
+    username: admin
+    password: 123456
     virtual-host: /
     connection-timeout: 10000
     listener:

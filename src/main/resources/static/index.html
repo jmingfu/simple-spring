@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Boot 接口调试页面</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Spring Boot 接口调试</h1>
+
+    <!-- GET 请求示例 -->
+    <div class="api-card">
+        <h3>
+            <span class="method method-get">GET</span>
+            获取数据（示例：用户列表）
+        </h3>
+        <form id="getForm">
+            <div class="form-group">
+                <label for="getUrl">接口地址</label>
+                <input type="text" id="getUrl" value="/api/users" placeholder="输入接口地址">
+            </div>
+            <div class="form-group">
+                <label for="getParams">请求参数（JSON格式）</label>
+                <textarea id="getParams" placeholder='例如：{"page":1,"size":10}'>{"page":1,"size":10}</textarea>
+            </div>
+            <button type="button" class="btn" onclick="sendGetRequest()">发送请求</button>
+            <button type="button" class="btn btn-reset" onclick="resetForm('getForm')">重置</button>
+
+            <div class="response-area" id="getResponse">
+                <h4>响应结果：</h4>
+                <div class="response-content"></div>
+            </div>
+        </form>
+    </div>
+
+    <!-- POST 请求示例 -->
+    <div class="api-card">
+        <h3>
+            <span class="method method-post">POST</span>
+            新增数据（示例：创建用户）
+        </h3>
+        <form id="postForm">
+            <div class="form-group">
+                <label for="postUrl">接口地址</label>
+                <input type="text" id="postUrl" value="/api/users" placeholder="输入接口地址">
+            </div>
+            <div class="form-group">
+                <label for="postData">请求体（JSON格式）</label>
+                <textarea id="postData" placeholder='例如：{"name":"张三","age":20}'>{"name":"张三","age":20}</textarea>
+            </div>
+            <button type="button" class="btn" onclick="sendPostRequest()">发送请求</button>
+            <button type="button" class="btn btn-reset" onclick="resetForm('postForm')">重置</button>
+
+            <div class="response-area" id="postResponse">
+                <h4>响应结果：</h4>
+                <div class="response-content"></div>
+            </div>
+        </form>
+    </div>
+
+    <!-- PUT 请求示例 -->
+    <div class="api-card">
+        <h3>
+            <span class="method method-put">PUT</span>
+            修改数据（示例：更新用户）
+        </h3>
+        <form id="putForm">
+            <div class="form-group">
+                <label for="putUrl">接口地址</label>
+                <input type="text" id="putUrl" value="/api/users/1" placeholder="输入接口地址">
+            </div>
+            <div class="form-group">
+                <label for="putData">请求体（JSON格式）</label>
+                <textarea id="putData" placeholder='例如：{"name":"李四","age":22}'>{"name":"李四","age":22}</textarea>
+            </div>
+            <button type="button" class="btn" onclick="sendPutRequest()">发送请求</button>
+            <button type="button" class="btn btn-reset" onclick="resetForm('putForm')">重置</button>
+
+            <div class="response-area" id="putResponse">
+                <h4>响应结果：</h4>
+                <div class="response-content"></div>
+            </div>
+        </form>
+    </div>
+
+    <!-- DELETE 请求示例 -->
+    <div class="api-card">
+        <h3>
+            <span class="method method-delete">DELETE</span>
+            删除数据（示例：删除用户）
+        </h3>
+        <form id="deleteForm">
+            <div class="form-group">
+                <label for="deleteUrl">接口地址</label>
+                <input type="text" id="deleteUrl" value="/api/users/1" placeholder="输入接口地址">
+            </div>
+            <div class="form-group">
+                <label for="deleteParams">请求参数（JSON格式）</label>
+                <textarea id="deleteParams" placeholder='例如：{"id":1}'>{"id":1}</textarea>
+            </div>
+            <button type="button" class="btn" onclick="sendDeleteRequest()">发送请求</button>
+            <button type="button" class="btn btn-reset" onclick="resetForm('deleteForm')">重置</button>
+
+            <div class="response-area" id="deleteResponse">
+                <h4>响应结果：</h4>
+                <div class="response-content"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="api-request.js"></script>
+<script>
+    // 发送GET请求
+    async function sendGetRequest() {
+        const url = document.getElementById("getUrl").value;
+        const params = JSON.parse(document.getElementById("getParams").value || "{}");
+        const result = await requestApi(url, "GET", params);
+        renderResponse("getResponse", result);
+    }
+
+    // 发送POST请求
+    async function sendPostRequest() {
+        const url = document.getElementById("postUrl").value;
+        const data = JSON.parse(document.getElementById("postData").value || "{}");
+        const result = await requestApi(url, "POST", data);
+        renderResponse("postResponse", result);
+    }
+
+    // 发送PUT请求
+    async function sendPutRequest() {
+        const url = document.getElementById("putUrl").value;
+        const data = JSON.parse(document.getElementById("putData").value || "{}");
+        const result = await requestApi(url, "PUT", data);
+        renderResponse("putResponse", result);
+    }
+
+    // 发送DELETE请求
+    async function sendDeleteRequest() {
+        const url = document.getElementById("deleteUrl").value;
+        const params = JSON.parse(document.getElementById("deleteParams").value || "{}");
+        const result = await requestApi(url, "DELETE", params);
+        renderResponse("deleteResponse", result);
+    }
+</script>
+</body>
+</html>
