@@ -1,10 +1,14 @@
 package com.example.demo.modules.admin.controller;
 
+import com.example.demo.common.CodeEnum;
+import com.example.demo.common.Result;
+import com.example.demo.modules.admin.dto.AdminDTO;
 import com.example.demo.modules.admin.sevice.AdminService;
 import com.example.demo.config.DefaultPasswordProperties;
 import com.example.demo.modules.admin.entity.Admin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
@@ -40,7 +44,7 @@ public class AdminController {
 
     // 提交注册信息
     @PostMapping("/register")
-    public ModelAndView save(Admin admin) {
+    public Result<AdminDTO> save(Admin admin) {
         log.info("接收到管理员注册请求，参数：{}", admin); // 打印请求参数，确认是否进入方法
         // 如果注册密码为空，则赋值默认密码
         if (StringUtils.isEmpty(admin.getPassword())) {
@@ -48,10 +52,10 @@ public class AdminController {
         }
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         admin.setUserPassword(bCryptPasswordEncoder.encode(admin.getPassword()));
-        if (adminService.save(admin) != null) {
-            return new ModelAndView("redirect:/login");
-        } else {
-            return null;
-        }
+        Admin save = adminService.save(admin);
+        AdminDTO adminDTO = new AdminDTO();
+        BeanUtils.copyProperties(admin, adminDTO);
+        return Result.success(adminDTO);
+
     }
 }

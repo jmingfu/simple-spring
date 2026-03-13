@@ -6,6 +6,7 @@ import lombok.Data;
 public class Result<T> {
     private CodeEnum code;
     private T data;
+    private String msg;
 
     public CodeEnum getCode() {
         return code;
@@ -27,13 +28,14 @@ public class Result<T> {
         Result<T> r = new Result<>();
         r.setCode(CodeEnum.Success);
         r.setData(data);
+        r.setMsg(CodeEnum.Success.getStatus());
         return r;
     }
 
-    public static <T> Result<T> fail(T data) {
+    public static <T> Result<T> fail(CodeEnum status,String msg) {
         Result<T> r = new Result<>();
         r.setCode(CodeEnum.ServerError);
-        r.setData(data);
+        r.setMsg(msg);
         return r;
     }
 }
