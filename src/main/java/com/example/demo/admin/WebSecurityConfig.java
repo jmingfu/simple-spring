@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/user/**").access("hasRole('ROLE_USER')")
                 .antMatchers("/admin/**").permitAll()
-                .and().formLogin().defaultSuccessUrl("/user")
+                .and().formLogin().defaultSuccessUrl("/user/list")
                 .and().httpBasic()
                 // 禁用 CSRF
                 .and().csrf().disable();

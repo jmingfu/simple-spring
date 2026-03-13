@@ -1,9 +1,9 @@
 package com.example.demo.admin;
 
-import com.example.demo.register.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +26,7 @@ public class AdminController {
     private AdminService adminService;
     @Autowired
     private DefaultPasswordProperties defaultPasswordProperties;
+    private static final Logger log = LoggerFactory.getLogger(AdminController.class);
 
     // 管理注册页
     @GetMapping
@@ -37,6 +38,7 @@ public class AdminController {
     // 提交注册信息
     @PostMapping("/register")
     public ModelAndView save(Admin admin) {
+        log.info("接收到管理员注册请求，参数：{}", admin); // 打印请求参数，确认是否进入方法
         // 如果注册密码为空，则赋值默认密码
         if (StringUtils.isEmpty(admin.getPassword())) {
             admin.setUserPassword(defaultPasswordProperties.getPassword());
@@ -44,7 +46,7 @@ public class AdminController {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         admin.setUserPassword(bCryptPasswordEncoder.encode(admin.getPassword()));
         if (adminService.save(admin) != null) {
-            return new ModelAndView("redirect:/login ");
+            return new ModelAndView("redirect:/login");
         } else {
             return null;
         }

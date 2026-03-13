@@ -13,6 +13,11 @@ spring:
         welcome-page:
           enabled: true  # 开启默认首页
         static-path-pattern: /**  # 静态资源匹配规则（确保能访问到static下的所有文件）
+    jpa:
+      hibernate:
+        ddl-auto: none # 禁用JPA自动建表（我们手动建表了，避免冲突）
+        show-sql: true # 开启SQL日志，方便排查生成的SQL
+
 
 #thymelea模板配置
   thymeleaf:

@@ -31,11 +31,11 @@ const api = {
     // 用户管理接口
     user: {
         // 分页查询
-        list: (params) => service.get("/api/user/list", { params }),
+        list: (params) => service.get("/user/list", { params }),
         // 单条查询
         get: (id) => service.get(`/api/user/${id}`),
         // 新增
-        add: (data) => service.post("/api/user", data),
+        add: (data) => service.post("/user/add", data),
         // 修改
         update: (data) => service.put("/api/user", data),
         // 删除
