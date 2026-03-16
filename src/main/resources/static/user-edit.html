@@ -98,12 +98,19 @@
             // 提交表单
             async submitForm() {
                 try {
-                    await this.$refs.userForm.validate();
-                    await api.user.update(this.userForm);
-                    this.$message.success('修改成功!');
-                    this.goBack();
+                    const res = await api.user.add(this.userForm);
+                    if (res.code === "Success") {
+                        // 先弹出成功提示
+                        this.$message.success('修改成功!');
+                        // 延迟500毫秒再跳转，保证提示能看到
+                        setTimeout(() => {
+                            this.goBack();
+                        }, 500);
+                    } else {
+                        this.$message.error(res.msg);
+                    }
                 } catch (err) {
-                    this.$message.error('修改失败');
+                    this.$message.error('服务器异常');
                 }
             },
             // 重置表单

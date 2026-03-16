@@ -17,6 +17,13 @@ spring:
       hibernate:
         ddl-auto: none # 禁用JPA自动建表（我们手动建表了，避免冲突）
         show-sql: true # 开启SQL日志，方便排查生成的SQL
+    #redis 配置
+    redis:
+      host: 192.168.137.250
+      port: 6379
+      password: 123456
+      database: 0
+
 
 
 #thymelea模板配置

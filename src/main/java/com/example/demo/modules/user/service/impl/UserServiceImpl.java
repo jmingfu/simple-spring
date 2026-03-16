@@ -49,7 +49,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 保存数据
         if (user.getId() != null && user.getId() != 0) {
             userMapper.updateUser(user);
-        } else {
+        } else if(user.getId()==null){
             LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
             userWrapper.eq(User::getName, user.getName());
             if (userMapper.selectCount(userWrapper) != 0) {
