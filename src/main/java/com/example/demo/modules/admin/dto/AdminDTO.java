@@ -1,5 +1,7 @@
 package com.example.demo.modules.admin.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,12 +16,17 @@ import java.util.Collection;
  * @author zhuhuix
  * @date 2020-07-08
  */
+@ApiModel(description = "管理员信息")
 public class AdminDTO{
 
-    // 管理员id
+    @ApiModelProperty("管理员id")
     private Long id;
 
+    @ApiModelProperty("管理员用户名")
     private String userName;
+
+    @ApiModelProperty("管理员登录token")
+    private String token;
 
     public Long getId() {
         return id;

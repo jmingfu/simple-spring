@@ -1,6 +1,8 @@
 package com.example.demo.modules.user.dto;
 
 import com.example.demo.common.PageParam;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,20 +19,22 @@ import java.sql.Timestamp;
  * @date 2020-07-03
  * @date 2020-07-07 添加JPA映射注解
  */
+@ApiModel(description = "用户详情信息")
 public class UserDTO extends PageParam implements Serializable {
-    // 用户id
+
+    @ApiModelProperty("用户id")
     private Long id;
-    // 用户名
 
+    @ApiModelProperty("用户名")
     private String name;
-    // 邮箱
 
+    @ApiModelProperty("邮箱")
     private String email;
 
-    // 创建时间
+    @ApiModelProperty("创建时间")
     private Timestamp createTime;
 
-    // 更新时间
+    @ApiModelProperty("更新时间")
     private Timestamp updateTime;
 
     public UserDTO(){}
@@ -63,6 +67,13 @@ public class UserDTO extends PageParam implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public Timestamp getUpdateTime() {
+        return updateTime;
     }
 
     @Override
