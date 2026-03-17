@@ -1,11 +1,11 @@
 package com.example.demo.modules.admin.controller;
 
-import com.example.demo.common.CodeEnum;
 import com.example.demo.common.Result;
-import com.example.demo.modules.admin.dto.AdminDTO;
-import com.example.demo.modules.admin.sevice.AdminService;
+import com.example.demo.common.ReturnException;
 import com.example.demo.config.DefaultPasswordProperties;
+import com.example.demo.modules.admin.dto.AdminDTO;
 import com.example.demo.modules.admin.entity.Admin;
+import com.example.demo.modules.admin.sevice.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -53,16 +53,18 @@ public class AdminController {
         }
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         admin.setUserPassword(bCryptPasswordEncoder.encode(admin.getPassword()));
-        Admin save = adminService.save(admin);
+        if (!adminService.saveAdmin(admin)) {
+            throw new ReturnException("数据新增失败");
+        }
         AdminDTO adminDTO = new AdminDTO();
-        BeanUtils.copyProperties(save, adminDTO);
+        BeanUtils.copyProperties(admin, adminDTO);
         return Result.success(adminDTO);
 
     }
 
     @PostMapping("/login")
     @ApiOperation(value = "管理员用户名密码登录")
-    public Result<AdminDTO> login(@RequestBody Admin admin){
+    public Result<AdminDTO> login(@RequestBody Admin admin) {
         return Result.success(null);
     }
 }

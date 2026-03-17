@@ -1,5 +1,7 @@
 package com.example.demo.modules.admin.sevice;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.demo.modules.admin.dto.AdminDTO;
 import com.example.demo.modules.admin.entity.Admin;
 import com.example.demo.modules.admin.repository.AdminRepository;
 import org.slf4j.Logger;
@@ -16,8 +18,10 @@ import org.springframework.stereotype.Service;
  * @author zhuhuix
  * @date 2020-07-08
  */
-public interface AdminService extends UserDetailsService{
+public interface AdminService{
 
     // 保存管理员
-    Admin save(Admin admin);
+    boolean saveAdmin(Admin admin);
+
+    AdminDTO login(Admin admin);
 }

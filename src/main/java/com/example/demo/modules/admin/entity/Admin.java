@@ -1,5 +1,6 @@
 package com.example.demo.modules.admin.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import java.util.Collection;
  * @date 2020-07-08
  */
 @Entity
+@TableName("admin")
 public class Admin implements UserDetails {
 
     // 管理员id

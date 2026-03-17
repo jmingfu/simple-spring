@@ -1,5 +1,6 @@
 package com.example.demo.modules.user.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -17,6 +18,7 @@ import java.sql.Timestamp;
  * @date 2020-07-07 添加JPA映射注解
  */
 @Entity
+@TableName("user")
 public class User implements Serializable {
     // 用户id
     @Id
@@ -24,11 +26,11 @@ public class User implements Serializable {
     private Long id;
     // 用户名
     @NotBlank(message = "用户名称不能为空")
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
     // 邮箱
-    @Column(name="email")
-    @Pattern(message ="邮箱格式不符", regexp = "^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$")
+    @Column(name = "email")
+    @Pattern(message = "邮箱格式不符", regexp = "^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$")
     private String email;
 
     // 创建时间
@@ -41,7 +43,8 @@ public class User implements Serializable {
     @UpdateTimestamp
     private Timestamp updateTime;
 
-    public User(){}
+    public User() {
+    }
 
     public User(Long id, String name, String email) {
         this.id = id;
@@ -52,6 +55,7 @@ public class User implements Serializable {
     public Timestamp getCreateTime() {
         return createTime;
     }
+
     public Long getId() {
         return id;
     }
