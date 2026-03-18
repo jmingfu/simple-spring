@@ -20,6 +20,10 @@ public class WebConfig implements WebMvcConfigurer {
                         "/admin/login",
                         "/admin/register",
                         "/swagger-ui/**",
-                        "/v3/api-docx/**");
+                        "/v3/api-docx/**",
+                        "/**.html",
+                        "/js/**",
+                        "/css/**",
+                        "/img/**");
     }
 }

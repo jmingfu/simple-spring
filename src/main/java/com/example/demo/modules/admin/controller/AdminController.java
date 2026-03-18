@@ -1,8 +1,6 @@
 package com.example.demo.modules.admin.controller;
 
 import com.example.demo.common.Result;
-import com.example.demo.common.ReturnException;
-import com.example.demo.config.DefaultPasswordProperties;
 import com.example.demo.modules.admin.dto.AdminDTO;
 import com.example.demo.modules.admin.entity.Admin;
 import com.example.demo.modules.admin.sevice.AdminService;
@@ -10,11 +8,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -55,7 +50,7 @@ public class AdminController {
 
     @PostMapping("/login")
     @ApiOperation(value = "管理员用户名密码登录")
-    public Result<AdminDTO> login(@RequestBody Admin admin) {
+    public Result<AdminDTO> login(@RequestBody Admin admin) throws Exception{
         return Result.success(adminService.login(admin));
     }
 

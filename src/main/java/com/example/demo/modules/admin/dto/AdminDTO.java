@@ -3,13 +3,6 @@ package com.example.demo.modules.admin.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.persistence.*;
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * 基于SpringMVC框架开发web应用--管理员用户类

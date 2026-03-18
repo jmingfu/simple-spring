@@ -1,16 +1,7 @@
 package com.example.demo.modules.admin.sevice;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.demo.modules.admin.dto.AdminDTO;
 import com.example.demo.modules.admin.entity.Admin;
-import com.example.demo.modules.admin.repository.AdminRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,7 +16,7 @@ public interface AdminService{
     // 管理员注册
     AdminDTO saveAdmin(Admin admin);
     // 管理员登录
-    AdminDTO login(Admin admin);
+    AdminDTO login(Admin admin) throws Exception;
     //管理员登出
     void logout(HttpServletRequest request);
 }

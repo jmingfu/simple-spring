@@ -34,7 +34,7 @@ public class Result<T> {
 
     public static <T> Result<T> fail(CodeEnum status, String msg) {
         Result<T> r = new Result<>();
-        r.setCode(CodeEnum.ServerError);
+        r.setCode(status);
         r.setMsg(msg);
         return r;
     }

@@ -103,7 +103,7 @@
                     this.total = res.data.total || 0;
                     console.log("处理后数据：", this.userList, this.total);
                 } catch (err) {
-                    this.$message.error("获取列表失败");
+                    this.$message.error(err.data.msg);
                 }
             },
             // 重置搜索
