@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 基于SpringMVC框架开发web应用--管理员服务层
  *
@@ -20,8 +22,10 @@ import org.springframework.stereotype.Service;
  */
 public interface AdminService{
 
-    // 保存管理员
-    boolean saveAdmin(Admin admin);
-
+    // 管理员注册
+    AdminDTO saveAdmin(Admin admin);
+    // 管理员登录
     AdminDTO login(Admin admin);
+    //管理员登出
+    void logout(HttpServletRequest request);
 }

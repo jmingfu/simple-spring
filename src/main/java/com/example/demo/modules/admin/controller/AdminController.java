@@ -18,6 +18,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 基于SpringMVC框架开发web应用--管理员注册控制器
  *
@@ -31,8 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class AdminController {
     @Autowired
     private AdminService adminService;
-    @Autowired
-    private DefaultPasswordProperties defaultPasswordProperties;
+
     private static final Logger log = LoggerFactory.getLogger(AdminController.class);
 
     @Deprecated
@@ -47,24 +48,21 @@ public class AdminController {
     @ApiOperation(value = "提交注册信息")
     public Result<AdminDTO> save(@RequestBody Admin admin) {
         log.info("接收到管理员注册请求，参数：{}", admin); // 打印请求参数，确认是否进入方法
-        // 如果注册密码为空，则赋值默认密码
-        if (StringUtils.isEmpty(admin.getPassword())) {
-            admin.setUserPassword(defaultPasswordProperties.getPassword());
-        }
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        admin.setUserPassword(bCryptPasswordEncoder.encode(admin.getPassword()));
-        if (!adminService.saveAdmin(admin)) {
-            throw new ReturnException("数据新增失败");
-        }
-        AdminDTO adminDTO = new AdminDTO();
-        BeanUtils.copyProperties(admin, adminDTO);
-        return Result.success(adminDTO);
+
+        return Result.success(adminService.saveAdmin(admin));
 
     }
 
     @PostMapping("/login")
     @ApiOperation(value = "管理员用户名密码登录")
     public Result<AdminDTO> login(@RequestBody Admin admin) {
-        return Result.success(null);
+        return Result.success(adminService.login(admin));
+    }
+
+    @PostMapping("/logout")
+    @ApiOperation(value = "管理员登出")
+    public Result<String> login(HttpServletRequest request) {
+        adminService.logout(request);
+        return Result.success("操作成功");
     }
 }
