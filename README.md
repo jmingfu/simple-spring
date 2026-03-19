@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # simple-spring
 springboot小项目
 =======
@@ -8,4 +8,4 @@ springboot小项目
 
 -本项目模块主要有：管理员账号模块，用户管理模块。
 
->>>>>>> master
+
