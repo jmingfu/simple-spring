@@ -58,7 +58,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             userMapper.addUser(user);
         }
         // 调用注册通知流程
-        //registerMessageGateway.registerMessageFlow(user);
+        registerMessageGateway.registerMessageFlow(user);
         UserDTO userDTO = new UserDTO();
         BeanUtils.copyProperties(user, userDTO);
         return userDTO;
