@@ -28,7 +28,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             response.getWriter().write(objectMapper.writeValueAsString(Result.fail(CodeEnum.Forbidden, "请先登录")));
             return false;
         }
-        String admin=redisTemplate.opsForValue().get("LOGIN_TOKEN:"+token);
+        String admin=redisTemplate.opsForValue().get("LOGIN:"+token);
         if(StringUtils.isEmpty(admin)){
             response.setContentType("application/json;charset=utf-8");
             response.getWriter().write(objectMapper.writeValueAsString(Result.fail(CodeEnum.Forbidden, "登录已过期")));

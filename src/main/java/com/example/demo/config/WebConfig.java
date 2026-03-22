@@ -17,13 +17,19 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor()).
                 addPathPatterns("/**").//默认先拦截所有
                 excludePathPatterns(//需要放行的接口
-                        "/admin/login",
-                        "/admin/register",
-                        "/swagger-ui/**",
-                        "/v3/api-docx/**",
-                        "/**.html",
-                        "/js/**",
-                        "/css/**",
-                        "/img/**");
+                // 登录注册
+                "/admin/login",
+                "/admin/register",
+                // Swagger 静态资源
+                "/webjars/**",
+                "/swagger-resources/**",
+                "/swagger-ui.html",
+                // Swagger API 文档接口
+                "/v2/api-docs/**",
+                // 页面和静态资源
+                "/**.html",
+                "/js/**",
+                "/css/**",
+                "/img/**");
     }
 }

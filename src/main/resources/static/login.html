@@ -55,14 +55,20 @@
         try {
           const res = await api.user.login(this.loginForm);
           if (res.code === 'Success') {
-            this.$message.success('登录成功');
+            // 先弹出成功提示
+            this.$message.success('登录成功'+ JSON.stringify(res));
+            // 存储token
             localStorage.setItem('token', res.data.token);
-            window.location.href = 'index.html';
+            // 延迟 1.2 秒再跳转（足够看到弹窗）
+            setTimeout(() => {
+              window.location.href = 'index.html';
+            }, 1200);
           } else {
             this.$message.error(res.msg);
           }
         } catch (err) {
           this.$message.error('登录失败');
+          console.error(err); // 方便调试，建议保留
         }
       },
       // 新增：跳转到注册页
