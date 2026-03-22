@@ -2,10 +2,7 @@
 # simple-spring
 springboot小项目
 =======
--本项目是一个用户管理系统  
-
--本项目框架搭建参考自https://github.com/zhuhuix/spring-demo ，目前已经被我改为前后端分离式小项目,使用spring boot + spring MVC + mybatis-plus搭建而成，使用redis做登录鉴权。  
-
--本项目模块主要有：管理员账号模块，用户管理模块。
+-基于SpringBoot+SpringMVC的用户管理系统，目前已完成前后端分离，包含常用的CRUD接口、分页查询、全局异常处理、接口返回对象统一、JWT+Redis鉴权、RabbitMQ消息队列。
+使用Swagger测试接口和查看接口文档。在本地新建Linux虚拟机，并配置好MySQL、Redis、RabbitMQ之后，能够通过几个简单的前端页面访问所有功能。
 
 
