@@ -1,8 +1,8 @@
 package com.example.demo.config;
 
-import com.example.demo.common.CodeEnum;
+import com.example.demo.enums.CodeEnum;
 import com.example.demo.common.Result;
-import com.example.demo.common.ReturnException;
+import com.example.demo.exception.ReturnException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

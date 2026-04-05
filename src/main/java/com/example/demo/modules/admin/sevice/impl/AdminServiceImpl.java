@@ -1,9 +1,8 @@
 package com.example.demo.modules.admin.sevice.impl;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.demo.common.ReturnException;
-import com.example.demo.common.util.MD5Util;
+import com.example.demo.exception.ReturnException;
+import com.example.demo.util.MD5Util;
 import com.example.demo.config.DefaultPasswordProperties;
 import com.example.demo.modules.admin.dto.AdminDTO;
 import com.example.demo.modules.admin.entity.Admin;

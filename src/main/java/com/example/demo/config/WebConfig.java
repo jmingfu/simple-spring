@@ -20,6 +20,8 @@ public class WebConfig implements WebMvcConfigurer {
                 // 登录注册
                 "/admin/login",
                 "/admin/register",
+                // 小程序登录或注册
+                "/api/v1/member/login-or-register",
                 // Swagger 静态资源
                 "/webjars/**",
                 "/swagger-resources/**",

@@ -1,5 +1,6 @@
 package com.example.demo.common;
 
+import com.example.demo.enums.CodeEnum;
 import lombok.Data;
 
 @Data

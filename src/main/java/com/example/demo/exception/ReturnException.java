@@ -1,4 +1,6 @@
-package com.example.demo.common;
+package com.example.demo.exception;
+
+import com.example.demo.enums.CodeEnum;
 
 public class ReturnException extends RuntimeException{
     private CodeEnum code;

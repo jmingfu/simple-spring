@@ -1,11 +1,9 @@
 package com.example.demo.config;
 
-import com.alibaba.druid.support.json.JSONUtils;
-import com.example.demo.common.CodeEnum;
+import com.example.demo.enums.CodeEnum;
 import com.example.demo.common.Result;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;

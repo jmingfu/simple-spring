@@ -78,3 +78,8 @@ mybatis-plus:
     map-underscore-to-camel-case: true # 下划线转驼峰
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印sql
   type-aliases-package: com.xxx.entity # 实体类包
+
+wechat:
+  mini:
+    app-id: wx123456789
+    app-secret: abcdefghijklmn

@@ -1,4 +1,4 @@
-package com.example.demo.common;
+package com.example.demo.enums;
 
 public enum CodeEnum {
     Success(200,"成功"),

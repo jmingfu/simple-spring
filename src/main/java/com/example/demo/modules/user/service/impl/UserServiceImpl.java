@@ -1,11 +1,10 @@
 package com.example.demo.modules.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.demo.common.ReturnException;
+import com.example.demo.exception.ReturnException;
 import com.example.demo.modules.integration.RegisterMessageGateway;
 import com.example.demo.modules.user.dto.UserDTO;
 import com.example.demo.modules.user.entity.User;
