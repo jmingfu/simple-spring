@@ -20,7 +20,10 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String token = request.getHeader("token");
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer")) {
+            token = token.substring(7);
+        }
         if (StringUtils.isEmpty(token)) {
             response.setContentType("application/json;charset=utf-8");
             response.getWriter().write(objectMapper.writeValueAsString(Result.fail(CodeEnum.Forbidden, "请先登录")));

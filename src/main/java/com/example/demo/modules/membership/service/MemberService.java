@@ -1,5 +1,7 @@
 package com.example.demo.modules.membership.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.modules.membership.dto.MemberDTO;
 import org.springframework.stereotype.Service;
 
@@ -12,5 +14,7 @@ import org.springframework.stereotype.Service;
  */
 
 public interface MemberService {
-    MemberDTO wxLogin(MemberDTO memberDTO);
+    MemberDTO   wxLogin(MemberDTO memberDTO)throws Exception;
+    MemberDTO getById(Long id);
+    IPage<MemberDTO> selectPage(MemberDTO memberDTO);
 }

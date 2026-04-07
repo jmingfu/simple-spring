@@ -1,10 +1,13 @@
 package com.example.demo.common;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
 public class PageParam {
+    @ApiModelProperty("分页参数-页码")
     private Integer pageNum = 1;
+    @ApiModelProperty("分页参数-页面大小")
     private Integer pageSize = 0;
 
     public Integer getPageNum() {

@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -63,16 +66,19 @@ public class Member implements Serializable {
     /**
     * 注册时间
     */
+    @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty("注册时间")
     private Date createTime;
     /**
     * 更新时间
     */
+    @TableField(fill = FieldFill.UPDATE)
     @ApiModelProperty("更新时间")
     private Date updateTime;
     /**
-    * 是否删除 0否1是
+    * 是否删除 0否1是，逻辑删除字段
     */
+    @TableLogic
     @ApiModelProperty("是否删除 0否1是")
     private Integer isDeleted;
 
