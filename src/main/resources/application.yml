@@ -88,3 +88,13 @@ wechat:
   mini:
     app-id: wx123456789
     app-secret: abcdefghijklmn
+
+#微信登录配置
+wx:
+  login:
+    #签名密钥
+    sign-secret: jmfjmf0335
+    #签名过期时间 秒
+    sign-expire-seconds: 300
+    #防重放nonce过期时间 秒
+    nonce-expire-seconds: 60

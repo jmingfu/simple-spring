@@ -180,7 +180,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-
+        <!--Hutool依赖-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.42</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/hutool-all-5.8.42.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
@@ -195,5 +202,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

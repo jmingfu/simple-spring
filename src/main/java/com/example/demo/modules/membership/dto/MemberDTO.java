@@ -91,4 +91,12 @@ public class MemberDTO extends PageParam implements Serializable {
     @ApiModelProperty("会员注册结束时间")
     private LocalDateTime endTime;
 
+    @ApiModelProperty("微信登录签名")
+    private String sign;
+
+    @ApiModelProperty("微信防重nonce")
+    private String nonce;
+
+    @ApiModelProperty("登录时间戳")
+    private String timeStamp;
 }

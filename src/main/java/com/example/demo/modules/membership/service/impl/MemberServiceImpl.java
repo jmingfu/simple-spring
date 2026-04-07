@@ -1,32 +1,29 @@
 package com.example.demo.modules.membership.service.impl;
 
+import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.demo.config.WechatLoginProperties;
 import com.example.demo.config.WechatMiniConfig;
 import com.example.demo.exception.ReturnException;
 import com.example.demo.modules.admin.controller.AdminController;
 import com.example.demo.modules.membership.dto.MemberDTO;
-import com.example.demo.modules.membership.dto.WechatCode2SessionRes;
 import com.example.demo.modules.membership.entity.Member;
 import com.example.demo.modules.membership.mapper.MemberMapper;
 import com.example.demo.modules.membership.service.MemberService;
-import com.example.demo.modules.user.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Objects;
 import java.util.UUID;
-
+import java.util.concurrent.TimeUnit;
+import cn.hutool.*;
 /**
  * 基于SpringBoot框架的个人练手项目-
  *
@@ -47,10 +44,18 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private WechatLoginProperties wechatLoginProperties;
+
     private static final Logger log = LoggerFactory.getLogger(AdminController.class);
+
 
     @Override
     public MemberDTO wxLogin(MemberDTO memberDTO) throws Exception {
+        if(!checkSign(memberDTO.getSign(),memberDTO.getCode(),memberDTO.getNonce(),memberDTO.getTimeStamp())){
+            throw new ReturnException("非法请求");
+        }
 //        String url = String.format("https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code",
 //                wechatMiniConfig.getAppId(),
 //                wechatMiniConfig.getAppSecret(),
@@ -90,6 +95,30 @@ public class MemberServiceImpl implements MemberService {
         stringRedisTemplate.opsForValue().set("LOGIN:token:latest" + member.getOpenid(), objectMapper.writeValueAsString(memberDTO));
         stringRedisTemplate.opsForValue().set("LOGIN:"+token,objectMapper.writeValueAsString(memberDTO));
         return memberDTO;
+    }
+    public Boolean checkSign(String sign,String code,String nonce,String timestamp){
+//        long now = System.currentTimeMillis() / 1000;
+//        long ts;
+//        try {
+//            ts=Long.parseLong(timestamp);
+//        } catch (NumberFormatException e) {
+//            throw new ReturnException("时间戳格式错误");
+//        }
+//        //从配置读取过期时间
+//        if(Math.abs(now-ts)>wechatLoginProperties.getSignExpireSeconds()){
+//            throw new ReturnException("请求已过期");
+//        }
+
+        String plainText=code+timestamp+nonce+wechatLoginProperties.getSignSecret();
+        String md5 = SecureUtil.md5(plainText);
+        System.out.println(md5);
+        //防重放
+        String nonceKey = "LOGIN:nonce"+nonce;
+        Boolean absent = stringRedisTemplate.opsForValue().setIfAbsent(nonceKey, "1", wechatLoginProperties.getNonceExpireSeconds(), TimeUnit.SECONDS);
+        if(Boolean.FALSE.equals(absent)){
+            throw new ReturnException("请求过于频繁，请稍后重试");
+        }
+        return md5.equals(sign);
     }
 
     @Override
