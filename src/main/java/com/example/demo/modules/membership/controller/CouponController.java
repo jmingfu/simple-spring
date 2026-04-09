@@ -1,0 +1,40 @@
+package com.example.demo.modules.membership.controller;
+
+import com.example.demo.common.Result;
+import com.example.demo.modules.membership.dto.CouponDTO;
+import com.example.demo.modules.membership.service.CouponService;
+import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * 基于SpringBoot框架的个人练手项目-优惠券管理控制器
+ *
+ * @author JMF
+ * @date 2026-04-08 12:51
+ * @date 2026-04-08
+ */
+@Api(tags = "优惠券管理控制器")
+@RestController()
+@RequestMapping("/api/v1/coupon")
+public class CouponController {
+    @Autowired
+    private CouponService couponService;
+
+    @PostMapping()
+    public Result<CouponDTO> addOrEdit(@RequestBody CouponDTO couponDTO)throws Exception{
+        return Result.success(couponService.addOrEdit(couponDTO));
+    }
+
+    @DeleteMapping()
+    public Result<Boolean> delete(@RequestParam Long id){
+        return Result.success(couponService.delete(id));
+    }
+
+    @GetMapping()
+    public Result<CouponDTO> getCoupon(@RequestParam Long id)throws Exception{
+        return Result.success(couponService.getCoupon(id));
+    }
+
+
+}

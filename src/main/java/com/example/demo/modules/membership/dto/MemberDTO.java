@@ -4,6 +4,7 @@ import com.example.demo.common.PageParam;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,6 +20,7 @@ import java.util.Date;
  * @TableName member
  */
 @Data
+@Validated
 public class MemberDTO extends PageParam implements Serializable {
 
     /**

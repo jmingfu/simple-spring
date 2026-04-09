@@ -1,6 +1,7 @@
 package com.example.demo.modules.membership.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.demo.modules.membership.entity.CouponTemplate;
 import com.example.demo.modules.membership.entity.Member;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,6 @@ import org.springframework.stereotype.Repository;
 //@Api(tags = "会员mapper类")
 @Repository
 @Mapper
-public interface MemberMapper extends BaseMapper<Member> {
+public interface CouponMapper extends BaseMapper<CouponTemplate> {
 
 }

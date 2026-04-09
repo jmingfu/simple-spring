@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.validation.annotation.Validated;
 
 /**
 * 会员表
@@ -23,6 +24,7 @@ import org.hibernate.validator.constraints.Length;
 */
 @TableName("member")
 @Data
+@Validated
 public class Member implements Serializable {
 
     /**

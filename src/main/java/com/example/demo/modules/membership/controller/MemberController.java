@@ -33,6 +33,7 @@ public class MemberController {
     }
 
     @GetMapping("")
+    @ApiLimit
     @ApiOperation(value = "根据id查询会员")
     public Result<MemberDTO> getById(@RequestParam Long id){
         return Result.success(memberService.getById(id));
