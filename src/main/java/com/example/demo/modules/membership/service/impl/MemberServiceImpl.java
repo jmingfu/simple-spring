@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.demo.common.RedisConstant;
 import com.example.demo.config.WechatLoginProperties;
 import com.example.demo.config.WechatMiniConfig;
 import com.example.demo.exception.ReturnException;
@@ -21,9 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import cn.hutool.*;
+
 /**
  * 基于SpringBoot框架的个人练手项目-
  *
@@ -53,7 +55,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberDTO wxLogin(MemberDTO memberDTO) throws Exception {
-        if(!checkSign(memberDTO.getSign(),memberDTO.getCode(),memberDTO.getNonce(),memberDTO.getTimeStamp())){
+        if (!checkSign(memberDTO.getSign(), memberDTO.getCode(), memberDTO.getNonce(), memberDTO.getTimeStamp())) {
             throw new ReturnException("非法请求");
         }
 //        String url = String.format("https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code",
@@ -86,17 +88,17 @@ public class MemberServiceImpl implements MemberService {
             }
         }
         memberDTO.setToken(token);
-        String s = stringRedisTemplate.opsForValue().get("LOGIN:token:latest" + member.getOpenid());
-        if(StringUtils.isNotBlank(s)){
-            MemberDTO oldMem = objectMapper.readValue(s,MemberDTO.class);
-            String oldToken=oldMem.getToken();
-            stringRedisTemplate.delete("LOGIN:"+oldToken);
+        String oldToken = stringRedisTemplate.opsForValue().get(RedisConstant.LOGIN_OPENID + member.getOpenid());
+        if (StringUtils.isNotBlank(oldToken)) {
+            stringRedisTemplate.delete(RedisConstant.LOGIN_TOKEN + oldToken);
         }
-        stringRedisTemplate.opsForValue().set("LOGIN:token:latest" + member.getOpenid(), objectMapper.writeValueAsString(memberDTO));
-        stringRedisTemplate.opsForValue().set("LOGIN:"+token,objectMapper.writeValueAsString(memberDTO));
+        //按照id存token，按照token存用户信息
+        stringRedisTemplate.opsForValue().set(RedisConstant.LOGIN_OPENID + member.getOpenid(), token);
+        stringRedisTemplate.opsForValue().set(RedisConstant.LOGIN_TOKEN + token, objectMapper.writeValueAsString(memberDTO));
         return memberDTO;
     }
-    public Boolean checkSign(String sign,String code,String nonce,String timestamp){
+
+    public Boolean checkSign(String sign, String code, String nonce, String timestamp) {
 //        long now = System.currentTimeMillis() / 1000;
 //        long ts;
 //        try {
@@ -109,13 +111,13 @@ public class MemberServiceImpl implements MemberService {
 //            throw new ReturnException("请求已过期");
 //        }
 
-        String plainText=code+timestamp+nonce+wechatLoginProperties.getSignSecret();
+        String plainText = code + timestamp + nonce + wechatLoginProperties.getSignSecret();
         String md5 = SecureUtil.md5(plainText);
         System.out.println(md5);
         //防重放
-        String nonceKey = "LOGIN:nonce"+nonce;
+        String nonceKey = "LOGIN:nonce" + nonce;
         Boolean absent = stringRedisTemplate.opsForValue().setIfAbsent(nonceKey, "1", wechatLoginProperties.getNonceExpireSeconds(), TimeUnit.SECONDS);
-        if(Boolean.FALSE.equals(absent)){
+        if (Boolean.FALSE.equals(absent)) {
             throw new ReturnException("请求过于频繁，请稍后重试");
         }
         return md5.equals(sign);
@@ -140,11 +142,10 @@ public class MemberServiceImpl implements MemberService {
         wrapper.between(dto.getBeginTime() != null && dto.getEndTime() != null
                 , Member::getCreateTime, dto.getBeginTime(), dto.getEndTime());
         Page<Member> memberPage = memberMapper.selectPage(page, wrapper);
-        IPage<MemberDTO> dtoPage = memberPage.convert(member -> {
+        return memberPage.convert(member -> {
             MemberDTO memberDTO = new MemberDTO();
             BeanUtils.copyProperties(member, memberDTO);
             return memberDTO;
         });
-        return dtoPage;
     }
 }

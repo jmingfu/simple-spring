@@ -1,10 +1,14 @@
 package com.example.demo.modules.membership.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.demo.annotation.ApiLimit;
 import com.example.demo.common.Result;
 import com.example.demo.modules.membership.dto.CouponDTO;
 import com.example.demo.modules.membership.service.CouponService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,7 +26,7 @@ public class CouponController {
     private CouponService couponService;
 
     @PostMapping()
-    public Result<CouponDTO> addOrEdit(@RequestBody CouponDTO couponDTO)throws Exception{
+    public Result<CouponDTO> addOrEdit(@Validated @RequestBody CouponDTO couponDTO)throws Exception{
         return Result.success(couponService.addOrEdit(couponDTO));
     }
 
@@ -36,5 +40,14 @@ public class CouponController {
         return Result.success(couponService.getCoupon(id));
     }
 
+    @GetMapping("/page")
+    @ApiLimit()
+    public Result<IPage<CouponDTO>> pageCoupon(@Validated CouponDTO couponDTO){
+        return Result.success(couponService.pageCoupon(couponDTO));
+    }
 
+    @PostMapping("/receive")
+    public Result<CouponDTO> receiveCoupon(@RequestParam Long id){
+        return Result.success(couponService.receiveCoupon(id));
+    }
 }

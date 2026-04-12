@@ -1,5 +1,6 @@
 package com.example.demo.enums;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import io.swagger.annotations.Api;
 
 /**
@@ -10,15 +11,18 @@ import io.swagger.annotations.Api;
  * @date 2026-04-08
  */
 @Api(tags = "优惠券类型")
+
 public enum CouponTypeEnum {
-    FULL_REDUCTION(1,"满减"),
-    DISCOUNT(2,"折扣"),
-    NO_THRESHOLD(3,"无门槛");
-    private final Integer code;
+    FULL_REDUCTION(1, "满减"),
+    DISCOUNT(2, "折扣"),
+    NO_THRESHOLD(3, "无门槛");
+    @EnumValue
+    private final int code;
     private final String desc;
-    CouponTypeEnum(Integer code,String desc){
-        this.code=code;
-        this.desc=desc;
+
+    CouponTypeEnum(int code, String desc) {
+        this.code = code;
+        this.desc = desc;
     }
 
     public Integer getCode() {
@@ -29,9 +33,9 @@ public enum CouponTypeEnum {
         return desc;
     }
 
-    public static CouponTypeEnum getByCode(Integer code){
-        for(CouponTypeEnum type:values()){
-            if(type.code.equals(code)){
+    public static CouponTypeEnum getByCode(int code) {
+        for (CouponTypeEnum type : values()) {
+            if (type.code==code) {
                 return type;
             }
         }

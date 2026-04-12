@@ -1,20 +1,31 @@
 package com.example.demo.modules.membership.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.RedisConstant;
+import com.example.demo.enums.CouponTypeEnum;
 import com.example.demo.exception.ReturnException;
 import com.example.demo.modules.membership.dto.CouponDTO;
+import com.example.demo.modules.membership.dto.MemberDTO;
 import com.example.demo.modules.membership.entity.CouponTemplate;
+import com.example.demo.modules.membership.entity.MemberCoupon;
 import com.example.demo.modules.membership.mapper.CouponMapper;
+import com.example.demo.modules.membership.mapper.MemberCouponMapper;
 import com.example.demo.modules.membership.service.CouponService;
+import com.example.demo.util.MemberUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 基于SpringBoot框架的个人练手项目-
@@ -31,11 +42,16 @@ public class CouponServiceImpl implements CouponService {
     StringRedisTemplate redisTemplate;
     @Autowired
     ObjectMapper objectMapper;
+    @Autowired
+    MemberCouponMapper memberCouponMapper;
 
     @Override
     public CouponDTO addOrEdit(CouponDTO couponDTO) throws Exception {
         CouponTemplate coupon = new CouponTemplate();
         BeanUtils.copyProperties(couponDTO, coupon);
+        if(couponDTO.getType().equals(CouponTypeEnum.FULL_REDUCTION)&& (Objects.isNull(couponDTO.getFullAmount()))){
+            throw new ReturnException("请输入满减门槛");
+        }
         if (couponDTO.getId() == null) {
             couponMapper.insert(coupon);
         } else {
@@ -82,4 +98,71 @@ public class CouponServiceImpl implements CouponService {
         redisTemplate.opsForValue().set(RedisConstant.ALL_COUPON, objectMapper.writeValueAsString(couponDTO));
         return couponDTO;
     }
+
+    @Override
+    public IPage<CouponDTO> pageCoupon(CouponDTO dto) {
+        Page<CouponTemplate> page=new Page<>(dto.getPageNum(),dto.getPageSize());
+        LambdaQueryWrapper<CouponTemplate> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.isNotEmpty(dto.getName()),CouponTemplate::getName,dto.getName());
+        wrapper.eq(Objects.nonNull(dto.getType()),CouponTemplate::getType,dto.getType());
+        wrapper.ge(Objects.nonNull(dto.getValidStartTime())&&Objects.nonNull(dto.getValidEndTime()),
+                CouponTemplate::getValidStartTime,dto.getValidStartTime());
+        wrapper.le(Objects.nonNull(dto.getValidStartTime())&&Objects.nonNull(dto.getValidEndTime()),
+                CouponTemplate::getValidEndTime,dto.getValidEndTime());
+        wrapper.gt(Objects.nonNull(dto.getIsExpire())&&dto.getIsExpire()==1,
+                CouponTemplate::getValidEndTime,new Date());
+        Page<CouponTemplate> templatePage = couponMapper.selectPage(page, wrapper);
+        return templatePage.convert(coupon->{
+            CouponDTO couponDTO = new CouponDTO();
+            BeanUtils.copyProperties(coupon,couponDTO);
+            return couponDTO;
+        });
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public CouponDTO receiveCoupon(Long couponId) {
+        // redis请求锁
+        MemberDTO memberInfo = MemberUtil.getMemberInfo();
+        Boolean locked = redisTemplate.opsForValue().setIfAbsent(RedisConstant.COUPON_RECEIVE_LOCK +
+                        memberInfo.getId() + ":" + couponId, "1", Duration.ofSeconds(1));
+        if(Boolean.FALSE.equals(locked)){
+            throw new ReturnException("操作过于频繁");
+        }
+
+        //先判断是否重复领取
+        LambdaQueryWrapper<MemberCoupon> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(MemberCoupon::getMemberId,memberInfo.getId());
+        wrapper.eq(MemberCoupon::getTemplateId,couponId);
+        if(memberCouponMapper.exists(wrapper)){
+            throw new ReturnException("请勿重复领取");
+        }
+
+        //数据库直接原子扣减
+        if(couponMapper.decreaseAmount(couponId)==0){
+            throw new ReturnException("优惠券已领完");
+        }
+        MemberCoupon memberCoupon = new MemberCoupon();
+        memberCoupon.setMemberId(memberInfo.getId());
+        memberCoupon.setTemplateId(couponId);
+        int insert = memberCouponMapper.insert(memberCoupon);
+        if(insert<1){
+            throw new ReturnException("领取失败！网络波动或重复点击！");
+        }
+        CouponTemplate couponTemplate = couponMapper.selectById(couponId);
+        CouponDTO couponDTO = new CouponDTO();
+        BeanUtils.copyProperties(couponTemplate,couponDTO);
+        return couponDTO;
+    }
+
+    @Override
+    public List<CouponDTO> getMyCoupons() {
+        MemberDTO memberInfo = MemberUtil.getMemberInfo();
+        return couponMapper.getMyCoupons(memberInfo.getId());
+    }
+
+//    @Override
+//    public List<CouponDTO> generateCode(Long couponId) {
+//
+//    }
 }

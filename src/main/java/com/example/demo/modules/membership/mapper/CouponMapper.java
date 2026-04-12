@@ -1,10 +1,14 @@
 package com.example.demo.modules.membership.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.demo.modules.membership.dto.CouponDTO;
 import com.example.demo.modules.membership.entity.CouponTemplate;
 import com.example.demo.modules.membership.entity.Member;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 基于SpringBoot框架的个人练手项目-
@@ -17,5 +21,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Mapper
 public interface CouponMapper extends BaseMapper<CouponTemplate> {
+    int decreaseAmount(@Param("id")Long id);
 
+    List<CouponDTO> getMyCoupons(@Param("memberId") Long memberId);
 }

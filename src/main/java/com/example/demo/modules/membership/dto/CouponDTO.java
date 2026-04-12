@@ -1,5 +1,7 @@
 package com.example.demo.modules.membership.dto;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.example.demo.common.PageParam;
 import com.example.demo.enums.CouponTypeEnum;
 import io.swagger.annotations.Api;
@@ -9,9 +11,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -50,6 +50,7 @@ public class CouponDTO extends PageParam {
      * 满减门槛（满减券必填）
      */
     @ApiModelProperty("满减门槛（满减券必填）")
+    @DecimalMin(value = "0.01", message = "满减门槛必须大于0")
     private BigDecimal fullAmount;
     /**
      * 减免金额（满减/无门槛）
@@ -100,4 +101,33 @@ public class CouponDTO extends PageParam {
      */
     @ApiModelProperty("是否删除 0否1是")
     private Integer isDeleted;
+
+    @ApiModelProperty("是否过期 0否1是")
+    private Integer isExpire;
+
+    /**
+     * 领取时间
+     */
+    @ApiModelProperty("领取时间")
+    private Date receiveTime;
+
+    /**
+     * 使用时间
+     */
+    @ApiModelProperty("使用时间")
+    private Date useTime;
+
+    /**
+     * 状态 1未使用 2已使用 3已过期
+     */
+    @ApiModelProperty("状态 1未使用 2已使用 3已过期")
+    private Integer status;
+
+    /**
+     * 核销码（唯一）
+     */
+    @Size(max= 32,message="编码长度不能超过32")
+    @ApiModelProperty("核销码（唯一）")
+    @Length(max= 32,message="编码长度不能超过32")
+    private String verificationCode;
 }

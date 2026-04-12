@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.example.demo.enums.CouponTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,7 +23,6 @@ import org.springframework.validation.annotation.Validated;
 * @TableName coupon_template
 */
 @TableName("coupon_template")
-@Validated
 @Data
 public class CouponTemplate implements Serializable {
 
@@ -88,6 +89,7 @@ public class CouponTemplate implements Serializable {
     * 创建时间
     */
     @ApiModelProperty("创建时间")
+    @TableField(updateStrategy = FieldStrategy.NEVER)
     private Date createTime;
     /**
     * 更新时间

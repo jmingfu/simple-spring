@@ -1,6 +1,10 @@
 package com.example.demo.modules.membership.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.modules.membership.dto.CouponDTO;
+
+import java.util.List;
 
 /**
  * 基于SpringBoot框架的个人练手项目-
@@ -10,7 +14,18 @@ import com.example.demo.modules.membership.dto.CouponDTO;
  * @date 2026-04-08
  */
 public interface CouponService {
+    //新增/编辑优惠券模板
     CouponDTO addOrEdit(CouponDTO couponDTO) throws Exception;
+    //删除优惠券
     Boolean delete(Long id);
+    //查看单个优惠券
     CouponDTO getCoupon(Long id) throws Exception;
+    //
+    IPage<CouponDTO> pageCoupon(CouponDTO dto);
+
+    CouponDTO receiveCoupon(Long couponId);
+
+    List<CouponDTO> getMyCoupons();
+
+//    List<CouponDTO> generateCode(Long couponId);
 }

@@ -83,7 +83,7 @@ mybatis-plus:
       logic-delete-field: isDeleted #实体类字段名
       logic-delete-value: 1 #已删除
       logic-not-delete-value: 0 #未删除
-
+  type-enums-package:
 wechat:
   mini:
     app-id: wx123456789
