@@ -16,6 +16,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 基于SpringBoot框架的个人练手项目-
@@ -49,12 +50,18 @@ public class LimitAspect {
             if (token != null) {
                 key = "limit:openId:" + token;
                 count = redisTemplate.opsForValue().increment(key, 1);
+                if(count==1){
+                    redisTemplate.expire(key, 1, TimeUnit.SECONDS);
+                }
                 if (count > openCount) {
                     throw new ReturnException("请求过于频繁");
                 }
             } else {
                 key = "limit:ip:" + ip;
                 count = redisTemplate.opsForValue().increment(key, 1);
+                if(count==1){
+                    redisTemplate.expire(key, 1, TimeUnit.SECONDS);
+                }
                 if(count>ipCount){
                     throw new ReturnException("网络繁忙，请稍后重试");
                 }

@@ -2,6 +2,7 @@ package com.example.demo.util;
 
 import com.example.demo.common.RedisConstant;
 import com.example.demo.exception.ReturnException;
+import com.example.demo.modules.crm.entity.CrmUser;
 import com.example.demo.modules.membership.dto.MemberDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +28,23 @@ public class MemberUtil {
     private static ObjectMapper objectMapper;
 
     public static MemberDTO getMemberInfo(){
+        String json=getToken();
+        try {
+            return objectMapper.readValue(json,MemberDTO.class);
+        } catch (JsonProcessingException e) {
+            throw new ReturnException("会员详情获取失败");
+        }
+    }
+    public static CrmUser getCrmUser(){
+        String json=getToken();
+        try {
+            return objectMapper.readValue(json,CrmUser.class);
+        } catch (JsonProcessingException e) {
+            throw new ReturnException("会员详情获取失败");
+        }
+    }
+
+    private static String getToken() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
             throw new ReturnException("无法获取请求上下文");
@@ -37,10 +55,6 @@ public class MemberUtil {
         }
 
         String json = redisTemplate.opsForValue().get(RedisConstant.LOGIN_TOKEN + token);
-        try {
-            return objectMapper.readValue(json,MemberDTO.class);
-        } catch (JsonProcessingException e) {
-            throw new ReturnException("会员详情获取失败");
-        }
+        return json;
     }
 }

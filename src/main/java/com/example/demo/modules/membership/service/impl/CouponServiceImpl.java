@@ -122,36 +122,48 @@ public class CouponServiceImpl implements CouponService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CouponDTO receiveCoupon(Long couponId) {
-        // redis请求锁
         MemberDTO memberInfo = MemberUtil.getMemberInfo();
-        Boolean locked = redisTemplate.opsForValue().setIfAbsent(RedisConstant.COUPON_RECEIVE_LOCK +
-                        memberInfo.getId() + ":" + couponId, "1", Duration.ofSeconds(1));
-        if(Boolean.FALSE.equals(locked)){
-            throw new ReturnException("操作过于频繁");
-        }
-
-        //先判断是否重复领取
-        LambdaQueryWrapper<MemberCoupon> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(MemberCoupon::getMemberId,memberInfo.getId());
-        wrapper.eq(MemberCoupon::getTemplateId,couponId);
-        if(memberCouponMapper.exists(wrapper)){
-            throw new ReturnException("请勿重复领取");
-        }
-
-        //数据库直接原子扣减
-        if(couponMapper.decreaseAmount(couponId)==0){
-            throw new ReturnException("优惠券已领完");
-        }
-        MemberCoupon memberCoupon = new MemberCoupon();
-        memberCoupon.setMemberId(memberInfo.getId());
-        memberCoupon.setTemplateId(couponId);
-        int insert = memberCouponMapper.insert(memberCoupon);
-        if(insert<1){
-            throw new ReturnException("领取失败！网络波动或重复点击！");
-        }
-        CouponTemplate couponTemplate = couponMapper.selectById(couponId);
+        // redis请求锁
         CouponDTO couponDTO = new CouponDTO();
-        BeanUtils.copyProperties(couponTemplate,couponDTO);
+        try {
+
+            Boolean locked = redisTemplate.opsForValue().setIfAbsent(RedisConstant.COUPON_RECEIVE_LOCK +
+                    memberInfo.getId() + ":" + couponId, "1", Duration.ofSeconds(5));
+            if(Boolean.FALSE.equals(locked)){
+                throw new ReturnException("领取中，请稍后");
+            }
+
+            //先判断是否重复领取
+            LambdaQueryWrapper<MemberCoupon> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(MemberCoupon::getMemberId,memberInfo.getId());
+            wrapper.eq(MemberCoupon::getTemplateId,couponId);
+            if(memberCouponMapper.exists(wrapper)){
+                throw new ReturnException("请勿重复领取");
+            }
+
+            //数据库直接原子扣减
+            if(couponMapper.decreaseAmount(couponId)==0){
+                throw new ReturnException("优惠券已领完");
+            }
+            MemberCoupon memberCoupon = new MemberCoupon();
+            memberCoupon.setMemberId(memberInfo.getId());
+            memberCoupon.setTemplateId(couponId);
+            int insert = memberCouponMapper.insert(memberCoupon);
+            if(insert<1){
+                throw new ReturnException("领取失败！网络波动或重复点击！");
+            }
+            CouponTemplate couponTemplate = couponMapper.selectById(couponId);
+
+            BeanUtils.copyProperties(couponTemplate,couponDTO);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            redisTemplate.delete(RedisConstant.COUPON_RECEIVE_LOCK +
+                    memberInfo.getId() + ":" + couponId);
+
+        }
         return couponDTO;
     }
 
