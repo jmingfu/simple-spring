@@ -15,8 +15,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ApiLimit {
-    //按照ip限流，默认30次
-    int ipLimit() default 30;
+    //按照ip限流，默认100次
+    int ipLimit() default 100;
 
     //按照用户openId限流
     int openLimit() default 10;
