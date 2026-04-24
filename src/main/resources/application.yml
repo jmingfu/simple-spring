@@ -23,7 +23,11 @@ spring:
     port: 6379
     password:
     database: 0
-
+  data:
+    mongodb:
+      host: 192.168.137.250
+      port: 27017
+      database: test
 
 
 #thymelea模板配置
